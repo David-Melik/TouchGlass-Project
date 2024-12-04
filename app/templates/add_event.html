@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Character encoding for the HTML document -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Responsive design settings -->
+    <title>Add Event</title>
+    <!-- Title of the webpage -->
+  </head>
+  <body>
+    <h1>Add Event</h1>
+    <!-- Main heading for the page -->
+    <form action="/add_event" method="POST">
+      <!-- Form for adding a new event -->
+      <label for="title">Event Title:</label>
+      <input type="text" id="title" name="title" required />
+      <!-- Input field for event title, required -->
+
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+      <!-- Textarea for event description, required -->
+
+      <label for="localisation">Localisation:</label>
+      <input type="text" id="localisation" name="localisation" required />
+      <!-- Input field for event location, required -->
+
+      <label for="age_requirement">Age Requirement:</label>
+      <input type="text" id="age_requirement" name="age_requirement" required />
+      <!-- Input for age requirement, required -->
+
+      <label for="date_event">Date and Time:</label>
+      <input type="datetime-local" id="date_event" name="date_event" required />
+      <!-- Input for event date and time, required -->
+
+      <label for="rules">Rules:</label>
+      <textarea id="rules" name="rules"></textarea>
+      <!-- Textarea for event rules, optional -->
+
+      <label for="average_price">Average Price:</label>
+      <input type="text" id="average_price" name="average_price" />
+      <!-- Input for average price, optional -->
+
+      <label for="student_advantages">Student Advantages:</label>
+      <textarea id="student_advantages" name="student_advantages"></textarea>
+      <!-- Textarea for student advantages, optional -->
+
+      <label for="event_type">Event Type:</label>
+      <input type="text" id="event_type" name="event_type" required />
+      <!-- Input for event type, required -->
+
+      <input type="submit" value="Add Event" />
+      <!-- Submit button for the form -->
+    </form>
+    <a href="{{ url_for('views.event_calendar') }}">Back to Calendar</a>
+    <!-- Link to return to the calendar page -->
+  </body>
+</html>

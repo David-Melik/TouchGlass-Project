@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liste des événements</title>
+  </head>
+  <body>
+    <h1>Ajouter un événement</h1>
+    <form action="{{ url_for('add_event_notifications') }}" method="POST">
+      <label for="titre">Titre :</label>
+      <input type="text" id="titre" name="titre" required /><br /><br />
+
+      <label for="description">Description :</label>
+      <input
+        type="text"
+        id="description"
+        name="description"
+        required
+      /><br /><br />
+
+      <label for="rules">Règles :</label>
+      <textarea id="rules" name="rules"></textarea><br />
+
+      <label for="localisation">Localisation :</label>
+      <input type="text" id="localisation" name="localisation" required /><br />
+
+      <label for="age_requirement">Groupe d'âge :</label><br />
+      <input
+        type="radio"
+        id="age18"
+        name="age_requirement"
+        value="18+"
+        required
+      />
+      <label for="age18">18+</label><br />
+      <input
+        type="radio"
+        id="age15"
+        name="age_requirement"
+        value="15+"
+        required
+      />
+      <label for="age15">15+</label><br />
+      <input
+        type="radio"
+        id="age10"
+        name="age_requirement"
+        value="10+"
+        required
+      />
+      <label for="age10">10+</label><br />
+      <input
+        type="radio"
+        id="toutpublic"
+        name="age_requirement"
+        value="toutpublic"
+        required
+      />
+      <label for="age10">tout public</label><br /><br />
+
+      <label for="date_event">Date et heure de l'événement :</label>
+      <input
+        type="datetime-local"
+        id="date_event"
+        name="date_event"
+        required
+      /><br />
+
+      <label for="average_price">Prix moyen :</label>
+      <input type="number" id="average_price" name="average_price" /><br />
+
+      <label for="student_advantages">Avantages étudiants :</label>
+      <textarea id="student_advantages" name="student_advantages"></textarea
+      ><br />
+
+      <label for="event_type">Type d'événement :</label>
+      <input type="text" id="event_type" name="event_type" required /><br />
+
+      <input type="submit" value="Ajouter l'événement" />
+    </form>
+
+    <h2>Liste des événements :</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Règles</th>
+          <th>Localisation</th>
+          <th>Exigence d'âge</th>
+          <th>Date et Heure</th>
+          <th>Prix Moyen</th>
+          <th>Avantages Étudiants</th>
+          <th>Type d'Événement</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.title }}</td>
+          <td>{{ event.description }}</td>
+          <td>{{ event.rules }}</td>
+          <td>{{ event.localisation }}</td>
+          <td>{{ event.age_requirement }}</td>
+          <td>{{ event.date_event.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{{ event.average_price }}</td>
+          <td>{{ event.student_advantages }}</td>
+          <td>{{ event.event_type }}</td>
+          <td>
+            <form action="/delete/{{ event.event_id }}" method="POST">
+              <button type="submit">Supprimer</button>
+            </form>
+            <a href="/update/{{ event.event_id }}">Modifier</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="/notifications">Voir les notifications</a>
+  </body>
+</html>

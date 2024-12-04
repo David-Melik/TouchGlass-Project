@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ user.name }}'s Account</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>{{ user.name }}'s Account</h2>
+      <h3>Information</h3>
+      <ul>
+        <li><strong>User ID:</strong> {{ user.user_id }}</li>
+        <li><strong>Username:</strong> {{ user.user_name }}</li>
+        <li><strong>Surname:</strong> {{ user.surname }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li>
+          <strong>Date of Birth:</strong> {% if user.ddn %} {{
+          user.ddn.strftime('%Y-%m-%d') }} {% else %} N/A {% endif %}
+        </li>
+        <li><strong>Sex:</strong> {{ user.sex }}</li>
+        <li>
+          <strong>Created At:</strong> {{ user.created_at.strftime('%Y-%m-%d
+          %H:%M:%S') }}
+        </li>
+      </ul>
+
+      <a href="{{ url_for('friends') }}" class="btn btn-secondary"
+        >Back to friends</a
+      >
+    </div>
+  </body>
+</html>

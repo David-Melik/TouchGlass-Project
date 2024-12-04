@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>friends</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">User friends</h1>
+
+      <!-- Accepted Friends -->
+      <section class="mb-5">
+        <h2>Accepted Friends</h2>
+        {% if accepted_friends %}
+        <ul class="list-group">
+          {% for friend in accepted_friends %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <a href="{{ url_for('account', user_name=friend.user_name) }}"
+              >{{ friend.name }}</a
+            >
+
+            <a
+              href="{{ url_for('remove_friend', friend_id=friend.user_id) }}"
+              class="btn btn-danger btn-sm"
+              >Remove Friend</a
+            >
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">You have no accepted friends.</p>
+        {% endif %}
+      </section>
+      <!-- Pending Friend Requests (For User 2, who receives the request) -->
+      <section class="mb-5">
+        <h2>Pending Friend Requests</h2>
+        {% if friend_requests %}
+        <ul class="list-group">
+          {% for user in friend_requests %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ user.name }}
+
+            <div>
+              <!-- Display Accept and Reject buttons for pending requests -->
+              <a
+                href="{{ url_for('accept_friend', friend_id=user.user_id) }}"
+                class="btn btn-success btn-sm mr-2"
+                title="Accept friend request from {{ user.name }}"
+              >
+                Accept
+              </a>
+              <a
+                href="{{ url_for('reject_friend', friend_id=user.user_id) }}"
+                class="btn btn-danger btn-sm"
+                title="Reject friend request from {{ user.name }}"
+              >
+                Reject
+              </a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">You have no pending friend requests.</p>
+        {% endif %}
+      </section>
+      <!-- Waiting Friend Requests -->
+      <section class="mb-5">
+        <h2>Waiting Friend Requests</h2>
+        {% if waiting_requests %}
+        <ul class="list-group">
+          {% for user in waiting_requests %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ user.name }}
+            <!-- Add any buttons or info if needed, like Cancel or Pending status -->
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">You have no pending friend requests.</p>
+        {% endif %}
+      </section>
+
+      <!-- Available Users to Add as Friends -->
+      <section class="mb-5">
+        <h2>Available Users</h2>
+        {% if users %}
+        <ul class="list-group">
+          {% for user in users %}
+          <li
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <!-- Link to user's profile, correctly using user.user_name -->
+
+            {{ user.name }}
+
+            <!-- Add Friend Button -->
+            <a
+              href="{{ url_for('add_friend', friend_id=user.user_id) }}"
+              class="btn btn-primary btn-sm"
+              title="Send friend request to {{ user.name }}"
+            >
+              Add Friend
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">No available users found.</p>
+        {% endif %}
+      </section>
+
+      <!-- Logout Button -->
+      <div class="text-center">
+        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg"
+          >Logout</a
+        >
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+      integrity="sha384-eSC/RPwjvRAucO26hXC8JtP3rUuoR4IjvpwxNlP5sLEkD8zE5rLJXYV7An1H9Jt"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgSN1peK3hc9gqMEY5X9E3qqkoPT3ePOpGk9W9AZPQgPOtn3M4d"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

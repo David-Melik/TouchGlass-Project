@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Calendar</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      #calendar {
+        max-width: 900px;
+        margin: 40px auto;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Touch Glass</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/event_calendar">Event Calendar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/bac">BAC Calculator</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1 class="mt-4">Event Calendar</h1>
+      <a href="{{ url_for('views.add_event') }}" class="btn btn-primary mb-3"
+        >Add Event</a
+      >
+      <div id="calendar"></div>
+    </div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="eventTitle"></h2>
+        <p><strong>Description:</strong> <span id="eventDescription"></span></p>
+        <p><strong>Location:</strong> <span id="eventLocalisation"></span></p>
+        <p>
+          <strong>Age Requirement:</strong>
+          <span id="eventAgeRequirement"></span>
+        </p>
+        <p><strong>Rules:</strong> <span id="eventRules"></span></p>
+        <p>
+          <strong>Average Price:</strong> <span id="eventAveragePrice"></span>
+        </p>
+        <p>
+          <strong>Student Advantages:</strong>
+          <span id="eventStudentAdvantages"></span>
+        </p>
+        <p><strong>Event Type:</strong> <span id="eventType"></span></p>
+        <p><strong>Date:</strong> <span id="eventDate"></span></p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: "/events",
+          eventClick: function (info) {
+            document.getElementById("eventTitle").innerText = info.event.title;
+            document.getElementById("eventDescription").innerText =
+              info.event.extendedProps.description || "N/A";
+            document.getElementById("eventLocalisation").innerText =
+              info.event.extendedProps.localisation || "N/A";
+            document.getElementById("eventAgeRequirement").innerText =
+              info.event.extendedProps.age_requirement || "N/A";
+            document.getElementById("eventRules").innerText =
+              info.event.extendedProps.rules || "N/A";
+            document.getElementById("eventAveragePrice").innerText =
+              info.event.extendedProps.average_price || "N/A";
+            document.getElementById("eventStudentAdvantages").innerText =
+              info.event.extendedProps.student_advantages || "N/A";
+            document.getElementById("eventType").innerText =
+              info.event.extendedProps.event_type || "N/A";
+            document.getElementById("eventDate").innerText =
+              info.event.start.toLocaleString();
+            document.getElementById("myModal").style.display = "block";
+          },
+        });
+        calendar.render();
+
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function () {
+          document.getElementById("myModal").style.display = "none";
+        };
+
+        window.onclick = function (event) {
+          if (event.target == document.getElementById("myModal")) {
+            document.getElementById("myModal").style.display = "none";
+          }
+        };
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

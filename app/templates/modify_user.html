@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Modify User</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Modify User</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="user_name">User Name</label>
+                <input type="text" class="form-control" id="user_name" name="user_name" value="{{ user.user_name }}" required />
+            </div>
+            <div class="form-group">
+                <label for="surname">Surname</label>
+                <input type="text" class="form-control" id="surname" name="surname" value="{{ user.surname }}" required />
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required />
+            </div>
+            <div class="form-group">
+                <label for="ddn">Date of Birth</label>
+                <input type="date" class="form-control" id="ddn" name="ddn" value="{{ user.ddn.strftime('%Y-%m-%d') if user.ddn else '' }}" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required />
+            </div>
+            <div class="form-group">
+                <label for="sex">Sex</label>
+                <select class="form-control" id="sex" name="sex" required>
+                    <option value="Male" {% if user.sex == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if user.sex == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if user.sex == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <hr />
+            <h4>Preferences</h4>
+            <div class="form-group">
+                <label for="locations">Location</label>
+                <input type="text" class="form-control" id="locations" name="locations" value="{{ preferences.locations if preferences else '' }}" />
+            </div>
+            <div class="form-group">
+                <label for="music_genre">Music Genre</label>
+                <select class="form-control" id="music_genre" name="music_genre" required>
+                    <option value="">Select a genre...</option>
+                    <option value="rock" {% if preferences.music_genre == 'rock' %}selected{% endif %}>Rock</option>
+                    <option value="pop" {% if preferences.music_genre == 'pop' %}selected{% endif %}>Pop</option>
+                    <option value="jazz" {% if preferences.music_genre == 'jazz' %}selected{% endif %}>Jazz</option>
+                    <option value="classical" {% if preferences.music_genre == 'classical' %}selected{% endif %}>Classical</option>
+                    <option value="hiphop" {% if preferences.music_genre == 'hiphop' %}selected{% endif %}>Hip-Hop</option>
+                    <option value="country" {% if preferences.music_genre == 'country' %}selected{% endif %}>Country</option>
+                    <option value="blues" {% if preferences.music_genre == 'blues' %}selected{% endif %}>Blues</option>
+                    <option value="electronic" {% if preferences.music_genre == 'electronic' %}selected{% endif %}>Electronic</option>
+                    <option value="metal" {% if preferences.music_genre == 'metal' %}selected{% endif %}>Metal</option>
+                    <option value="reggae" {% if preferences.music_genre == 'reggae' %}selected{% endif %}>Reggae</option>
+                    <option value="funk" {% if preferences.music_genre == 'funk' %}selected{% endif %}>Funk</option>
+                    <option value="rnb" {% if preferences.music_genre == 'rnb' %}selected{% endif %}>R&B</option>
+                    <option value="indie" {% if preferences.music_genre == 'indie' %}selected{% endif %}>Indie</option>
+                    <option value="dance" {% if preferences.music_genre == 'dance' %}selected{% endif %}>Dance</option>
+                    <option value="punk" {% if preferences.music_genre == 'punk' %}selected{% endif %}>Punk</option>
+                    <option value="soul" {% if preferences.music_genre == 'soul' %}selected{% endif %}>Soul</option>
+                    <option value="folk" {% if preferences.music_genre == 'folk' %}selected{% endif %}>Folk</option>
+                    <option value="techno" {% if preferences.music_genre == 'techno' %}selected{% endif %}>Techno</option>
+                    <option value="ambient" {% if preferences.music_genre == 'ambient' %}selected{% endif %}>Ambient</option>
+                    <option value="alternative" {% if preferences.music_genre == 'alternative' %}selected{% endif %}>Alternative</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{{ url_for('views.dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
