@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: rgb(241, 232, 223); /* Background color */
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input, textarea, select {
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  button {
+    background-color: rgb(240, 152, 64); /* Button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  a {
+    text-decoration: none;
+    color:rgb(240, 152, 64);
+  }
+  button {
+    background-color: rgb(240, 152, 64);
+    color:rgb(240, 152, 64);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgb(240, 152, 64);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: rgb(129, 79, 29); /* Button color on hover */
+  }

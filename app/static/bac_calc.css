@@ -1,0 +1,106 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+p {
+    text-align: center;
+}
+button {
+    background-color: rgb(240, 152, 64);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: rgb(241, 232, 223);
+    display: flex;
+    flex-direction: column;
+   
+}
+select {
+    appearance: none; /* Removes default appearance */
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fff;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik01IDUgTCAxMCAxMCBMNSA1IHoiIGZpbGw9IiNjY2MiLz4KICAgIDxwYXRoIGQ9IjAgNSA1IDUgTCA1IDEwIDEwIDEwIEwgNSA1IHoiIGZpbGw9IiNjY2MiLz4KPC9zdmc+); /* Arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px 16px;
+  }
+  
+    button:hover {
+    background-color: rgb(129, 79, 29);
+  }
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/img/bottle.png"), url("/static/img/bottle2.png");
+    background-size: 50% 100%, 50% 100%; /* Adjust sizes as needed */
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    opacity: 0.2;
+}
+
+form {
+    position: relative;
+    z-index: 1;
+    text-align: center; /* Center the button horizontally */
+}
+
+button {
+    font-size: 18px; /* Increase font size */
+    padding: 15px 30px; /* Increase padding */
+    background-color: rgb(240, 152, 64);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity:1;
+}

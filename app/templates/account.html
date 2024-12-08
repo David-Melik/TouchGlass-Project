@@ -10,6 +10,7 @@
     />
   </head>
   <body>
+    {% include "header.html" %}
     <div class="container">
       <h2>{{ user.name }}'s Account</h2>
       <h3>Information</h3>
@@ -29,7 +30,7 @@
         </li>
       </ul>
 
-      <a href="{{ url_for('friends') }}" class="btn btn-secondary"
+      <a href="{{ url_for('views.friends') }}" class="btn btn-secondary"
         >Back to friends</a
       >
     </div>

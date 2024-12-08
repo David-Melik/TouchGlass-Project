@@ -1,0 +1,313 @@
+<link
+  href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  @font-face {
+    font-family: "SWD";
+    src:
+      url("/static/font/BR.woff2") format("woff2"),
+      url("/static/font/BR.woff") format("woff"),
+      url("/static/font/BR.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body {
+    background-color: #f2e8de; /* Couleur de fond */
+    font-family: Arial, sans-serif;
+  }
+
+  /* Calendar styles */
+  #calendar {
+    max-width: 700px; /* Sets the maximum width of the calendar container */
+    margin: 40px auto; /* Centers the calendar horizontally and adds a vertical margin */
+  }
+
+  /* Modal styling */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Styliser la barre de recherche */
+  .search-bar {
+    flex-grow: 1;
+    margin: 0 20px;
+    position: relative;
+    max-width: 300px; /* Réduit la largeur */
+  }
+  .search-bar input {
+    width: 100%;
+    padding: 6px 12px; /* Ajuste la hauteur */
+    border: 1px solid #ccc;
+    border-radius: 20px;
+  }
+  .search-bar button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+  }
+
+  /* Menu déroulant stylisé */
+  .navbar-nav {
+    display: flex; /* Active le mode flexbox */
+    justify-content: center; /* Centre les éléments horizontalement */
+    width: 100%; /* S'assure que la navbar prend toute la largeur */
+    padding: 0; /* Supprime les espacements par défaut */
+    margin: 0; /* Supprime les marges par défaut */
+    background-color: white; /* Fond du menu */
+    border: 1px solid #ddd; /* Bordure */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre portée */
+  }
+
+  .navbar-nav .nav-item {
+    list-style: none; /* Supprime les puces par défaut */
+  }
+
+  .navbar-nav .nav-item .nav-link {
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center; /* Centre le texte des liens */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-nav .nav-item .nav-link:hover {
+    background-color: #f8d7c4; /* Couleur d'arrière-plan sur hover */
+    color: #000;
+  }
+
+  /* FullCalendar Event Customization */
+  .fc-event {
+    background-color: #e59c4c; /* Default background color for calendar events */
+    color: white; /* Text color for events */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+  }
+  /* Modify `background-color` and `color` to change the appearance of events. */
+
+  .fc-toolbar {
+    background-color: #f8f9fa; /* Light gray background for the toolbar */
+    color: #264653 !important; /* Toolbar text color */
+  }
+  /* You can modify this color for branding or aesthetics. */
+
+  .fc-event:hover {
+    transform: scale(1.05); /* Slightly enlarges the event on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adds a shadow effect */
+  }
+
+  .fc-highlight {
+    background-color: #e59c4c !important; /* Replace blue with your desired color */
+  }
+
+  .fc-day-today {
+    background-color: #ffe8d6 !important; /* Change background color for today */
+    /* border: 1px solid #e76f51 !important; Customize the border */
+  }
+
+  .fc-button {
+    background-color: #e59c4c !important; /* Button background */
+    color: white !important; /* Button text color */
+  }
+
+  .fc-daygrid-day:hover {
+    background-color: rgba(
+      238,
+      225,
+      211,
+      0.5
+    ) !important; /* Semi-transparent background color */
+  }
+
+  .fc-col-header-cell {
+    color: #ff5733 !important; /* Set the text color to your desired value */
+    font-weight: bold; /* Optional: Make the text bold */
+    font-size: 16px; /* Optional: Adjust the font size */
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    display: inline-block;
+    padding: 2px 4px;
+    color: black !important; /* Set the text color to your desired value */
+  }
+
+  .fc-daygrid-day-number {
+    color: black !important; /* Set the text color to your desired value */
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .fc-daygrid-event-dot {
+    margin: 0 4px;
+    box-sizing: content-box;
+    width: 0;
+    height: 0;
+    border: 4px solid #3788d8;
+    border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid #000000;
+    border-radius: 4px;
+    border-radius: calc(var(--fc-daygrid-event-dot-width, 8px) / 2);
+  }
+
+  /* COLOR FOR THE BUTTONS ON THE CALENDAR */
+
+  .fc-event-time {
+    color: black !important; /* Set the text color to your desired value */
+  }
+
+  .fc-daygrid-dot-event .fc-event-title {
+    color: black !important; /* Set the text color to your desired value */
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 700;
+  }
+</style>
+<header
+  style="
+    background-color: #ff8c00;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  "
+>
+  <!-- Logo -->
+  <a href="/" style="display: flex; align-items: center; text-decoration: none">
+    <img
+      src="{{ url_for('static', filename='img/logo.png') }}"
+      alt="Logo"
+      style="height: 50px; margin-right: 10px"
+    />
+    <h1
+      style="
+        margin: 0;
+        font-family: &quot;SWD&quot;, &quot;Comic Sans MS&quot;, cursive;
+        color: black;
+      "
+    >
+      Touch Glass
+    </h1>
+  </a>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" placeholder="Rechercher..." />
+    <button type="button">
+      <img
+        src="{{ url_for('static', filename='img/search.png') }}"
+        alt="Search"
+        style="height: 20px"
+      />
+    </button>
+  </div>
+
+  <!-- User Profile -->
+  <a
+    href="{% if user_authenticated %} /dashboard {% else %} /login {% endif %}"
+    style="
+      text-decoration: none;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    "
+  >
+    <img
+      src="{{ url_for('static', filename='img/user.png') }}"
+      alt="User Profile"
+      style="
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-left: 20px;
+      "
+    />
+  </a>
+
+  <!-- Hamburger Menu -->
+  <button
+    class="navbar-toggler"
+    type="button"
+    style="border: none; background: none; cursor: pointer"
+    data-toggle="collapse"
+    data-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <img
+      src="{{ url_for('static', filename='img/menu.png') }}"
+      alt="Menu"
+      style="height: 30px"
+    />
+  </button>
+</header>
+
+<!-- Menu dépliant -->
+<nav class="collapse navbar-collapse" id="navbarNav" style="padding: 10px">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/event_calendar">Event Calendar</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/notifications">Notifications</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/dashboard">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/friends">Friends</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/bac">BAC Calculator</a>
+    </li>
+  </ul>
+</nav>

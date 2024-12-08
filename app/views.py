@@ -406,7 +406,7 @@ def add_friend(friend_id):
 
     if not friend:
         flash("The user does not exist.")
-        return redirect(url_for("friends"))
+        return redirect(url_for("views.friends"))
 
     # Check if a request already exists (either accepted or requested)
     existing_requests = (
@@ -437,7 +437,7 @@ def add_friend(friend_id):
                 flash(f"You are already friends with {friend.name}.")
             break
 
-    return redirect(url_for("friends"))
+    return redirect(url_for("views.friends"))
 
 
 @register_views.route("/accept_friend/<int:friend_id>")
@@ -451,7 +451,7 @@ def accept_friend(friend_id):
 
     if not friend:
         flash("The user does not exist.")
-        return redirect(url_for("friends"))
+        return redirect(url_for("views.friends"))
 
     # Get the incoming friend request from the association table
     incoming_request = (
@@ -493,7 +493,7 @@ def accept_friend(friend_id):
     else:
         flash("No friend request found.")
 
-    return redirect(url_for("friends"))
+    return redirect(url_for("views.friends"))
 
 
 @register_views.route("/reject_friend/<int:friend_id>")
@@ -507,7 +507,7 @@ def reject_friend(friend_id):
 
     if not friend:
         flash("The user does not exist.")
-        return redirect(url_for("friends"))
+        return redirect(url_for("views.friends"))
 
     # Check if there's a pending friend request
     incoming_request = (
@@ -531,7 +531,7 @@ def reject_friend(friend_id):
     else:
         flash("No friend request found.")
 
-    return redirect(url_for("friends"))
+    return redirect(url_for("views.friends"))
 
 
 @register_views.route("/remove_friend/<int:friend_id>")
@@ -546,7 +546,7 @@ def remove_friend(friend_id):
 
     if not friend:
         flash("The user does not exist.")
-        return redirect(url_for("friends"))
+        return redirect(url_for("views.friends"))
 
     # Remove the friendship in both directions (both user->friend and friend->user)
     db.session.execute(
@@ -565,7 +565,7 @@ def remove_friend(friend_id):
 
     db.session.commit()
     flash(f"You have removed {friend.name} from your friends list.")
-    return redirect(url_for("friends"))
+    return redirect(url_for("views.friends"))
 
 
 # ----------------------Notifications-----------------------------------------

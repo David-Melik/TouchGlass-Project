@@ -6,9 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Responsive design settings -->
     <title>Add Event</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='add_event.css') }}"
+    />
     <!-- Title of the webpage -->
   </head>
   <body>
+    <style>
+      label {
+        display: inline-flex;
+      }
+    </style>
     <h1>Add Event</h1>
     <!-- Main heading for the page -->
     <form method="POST" action="{{ url_for('views.add_event') }}">

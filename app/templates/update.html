@@ -4,8 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mettre à jour l'événement</title>
+        <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='add_event.css') }}"
+    />
   </head>
   <body>
+     <style>
+      label {
+        display: inline-flex;
+      }
+    </style>
     <h1>Mettre à jour l'événement</h1>
       <form action="{{ url_for('views.update_event', event_id=event.event_id) }}" method="POST">
 
@@ -23,19 +32,20 @@
       <input type="text" id="localisation" name="localisation" value="{{ event.localisation }}" required /><br />
 
       <label for="participation">Groupe d'âge :</label><br />
-      
+      <label for="age18">18+
       <input type="radio" id="age18" name="participation" value="18+" 
         {% if event.age_requirement == "18+" %}checked{% endif %} required />
-      <label for="age18">18+</label><br />
-
+      </label>
+ <label for="age15">15+
       <input type="radio" id="age15" name="participation" value="15+" 
         {% if event.age_requirement == "15+" %}checked{% endif %} required />
-      <label for="age15">15+</label><br />
-
+     </label>
+<label for="age10">10+
       <input type="radio" id="age10" name="participation" value="10+" 
         {% if event.age_requirement == "10+" %}checked{% endif %} required />
-      <label for="age10">10+</label><br /><br />
-
+      
+</label>
+</br>
       <label for="date_event">Date et heure de l'événement :</label>
       <input type="datetime-local" id="date_event" name="date_event" 
         value="{{ event.date_event.strftime('%Y-%m-%dT%H:%M') }}" required /><br />
