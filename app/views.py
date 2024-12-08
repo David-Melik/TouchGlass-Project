@@ -46,6 +46,7 @@ def get_events():
                 "average_price": event.average_price,
                 "student_advantages": event.student_advantages,
                 "event_type": event.event_type,
+                "event_id": event.event_id,
             }
             for event in events
         ]
@@ -566,58 +567,6 @@ def remove_friend(friend_id):
 # ----------------------Notifications-----------------------------------------
 
 
-# Route for the main page (to add events and list events)
-@register_views.route("/add_event_notifications", methods=["GET", "POST"])
-def add_event_notifications():
-    if request.method == "POST":  # When the form is submitted
-        # Get form data
-        event_title = request.form["titre"]
-        event_description = request.form["description"]
-        event_rules = request.form["rules"]
-        event_localisation = request.form["localisation"]
-        event_age_requirement = request.form["age_requirement"]
-        event_date = request.form["date_event"]
-        event_average_price = request.form["average_price"]
-        event_student_advantages = request.form["student_advantages"]
-        event_type = request.form["event_type"]
-
-        # Create new event
-        new_event = Event(
-            title=event_title,
-            description=event_description,
-            rules=event_rules,
-            localisation=event_localisation,
-            age_requirement=event_age_requirement,
-            average_price=event_average_price,
-            student_advantages=event_student_advantages,
-            date_event=datetime.strptime(
-                event_date, "%Y-%m-%dT%H:%M"
-            ),  # Parse date-time from the form
-            event_type=event_type,
-        )
-        try:
-            db.session.add(new_event)
-            db.session.commit()
-
-            # Create notification for event creation
-            notification = Notification(
-                action="Created",
-                message=f"Event '{new_event.title}' was created at {new_event.date_event.strftime('%Y-%m-%d %H:%M')}",
-            )
-            db.session.add(notification)
-            db.session.commit()
-
-            return redirect(
-                "/add_event_notifications"
-            )  # Redirect back to the events page
-        except Exception as e:
-            return f"An error occurred: {str(e)}"
-    else:
-        events = Event.query.all()
-        return render_template("add_event_notifications.html", events=events)
-
-
-# Route for deleting an event
 # Route for deleting an event
 @register_views.route("/delete/<int:event_id>", methods=["POST"])
 def delete_event(event_id):
@@ -636,7 +585,7 @@ def delete_event(event_id):
         db.session.add(notification)
         db.session.commit()
 
-        return redirect("/add_event_notifications")  # Redirect back to the events page
+        return redirect("/event_calendar")  # Redirect back to the events page
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
@@ -679,9 +628,7 @@ def update_event(event_id):
             db.session.add(notification)
             db.session.commit()
 
-            return redirect(
-                "/add_event_notifications"
-            )  # Redirect back to the events page
+            return redirect("/event_calendar")  # Redirect back to the events page
         except Exception as e:
             return f"An error occurred: {str(e)}"
 
