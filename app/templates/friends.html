@@ -22,12 +22,12 @@
           <li
             class="list-group-item d-flex justify-content-between align-items-center"
           >
-            <a href="{{ url_for('account', user_name=friend.user_name) }}"
+            <a href="{{ url_for('views.account', user_name=friend.user_name) }}"
               >{{ friend.name }}</a
             >
 
             <a
-              href="{{ url_for('remove_friend', friend_id=friend.user_id) }}"
+              href="{{ url_for('views.remove_friend', friend_id=friend.user_id) }}"
               class="btn btn-danger btn-sm"
               >Remove Friend</a
             >
@@ -52,14 +52,14 @@
             <div>
               <!-- Display Accept and Reject buttons for pending requests -->
               <a
-                href="{{ url_for('accept_friend', friend_id=user.user_id) }}"
+                href="{{ url_for('views.accept_friend', friend_id=user.user_id) }}"
                 class="btn btn-success btn-sm mr-2"
                 title="Accept friend request from {{ user.name }}"
               >
                 Accept
               </a>
               <a
-                href="{{ url_for('reject_friend', friend_id=user.user_id) }}"
+                href="{{ url_for('views.reject_friend', friend_id=user.user_id) }}"
                 class="btn btn-danger btn-sm"
                 title="Reject friend request from {{ user.name }}"
               >
@@ -107,7 +107,7 @@
 
             <!-- Add Friend Button -->
             <a
-              href="{{ url_for('add_friend', friend_id=user.user_id) }}"
+              href="{{ url_for('views.add_friend', friend_id=user.user_id) }}"
               class="btn btn-primary btn-sm"
               title="Send friend request to {{ user.name }}"
             >

@@ -7,125 +7,52 @@
   </head>
   <body>
     <h1>Mettre à jour l'événement</h1>
-    <form
-      action="{{ url_for('update_event', event_id=event.event_id) }}"
-      method="POST"
-    >
+      <form action="{{ url_for('views.update_event', event_id=event.event_id) }}" method="POST">
+
+      
       <label for="titre">Titre :</label>
-      <input
-        type="text"
-        id="titre"
-        name="titre"
-        value="{{ event.title }}"
-        required
-      /><br /><br />
+      <input type="text" id="titre" name="titre" value="{{ event.title }}" required /><br /><br />
 
       <label for="description">Description :</label>
-      <input
-        type="text"
-        id="description"
-        name="description"
-        value="{{ event.description }}"
-        required
-      /><br /><br />
+      <input type="text" id="description" name="description" value="{{ event.description }}" required /><br /><br />
 
       <label for="rules">Règles :</label>
       <textarea id="rules" name="rules">{{ event.rules }}</textarea><br />
 
       <label for="localisation">Localisation :</label>
-      <input
-        type="text"
-        id="localisation"
-        name="localisation"
-        value="{{ event.localisation }}"
-        required
-      /><br />
+      <input type="text" id="localisation" name="localisation" value="{{ event.localisation }}" required /><br />
 
       <label for="participation">Groupe d'âge :</label><br />
-      <input
-        type="radio"
-        id="age18"
-        name="participation"
-        value="18+"
-        {%
-        if
-        event.age_requirement=""
-        ="18+"
-        %}checked{%
-        endif
-        %}
-        required
-      />
+      
+      <input type="radio" id="age18" name="participation" value="18+" 
+        {% if event.age_requirement == "18+" %}checked{% endif %} required />
       <label for="age18">18+</label><br />
 
-      <input
-        type="radio"
-        id="age15"
-        name="participation"
-        value="15+"
-        {%
-        if
-        event.age_requirement=""
-        ="15+"
-        %}checked{%
-        endif
-        %}
-        required
-      />
+      <input type="radio" id="age15" name="participation" value="15+" 
+        {% if event.age_requirement == "15+" %}checked{% endif %} required />
       <label for="age15">15+</label><br />
 
-      <input
-        type="radio"
-        id="age10"
-        name="participation"
-        value="10+"
-        {%
-        if
-        event.age_requirement=""
-        ="10+"
-        %}checked{%
-        endif
-        %}
-        required
-      />
+      <input type="radio" id="age10" name="participation" value="10+" 
+        {% if event.age_requirement == "10+" %}checked{% endif %} required />
       <label for="age10">10+</label><br /><br />
 
       <label for="date_event">Date et heure de l'événement :</label>
-      <input
-        type="datetime-local"
-        id="date_event"
-        name="date_event"
-        value="{{ event.date_event.strftime('%Y-%m-%dT%H:%M') }}"
-        required
-      /><br />
+      <input type="datetime-local" id="date_event" name="date_event" 
+        value="{{ event.date_event.strftime('%Y-%m-%dT%H:%M') }}" required /><br />
 
       <label for="average_price">Prix moyen :</label>
-      <input
-        type="text"
-        id="average_price"
-        name="average_price"
-        value="{{ event.average_price }}"
-      /><br />
+      <input type="text" id="average_price" name="average_price" value="{{ event.average_price }}" /><br />
 
       <label for="student_advantages">Avantages étudiants :</label>
-      <textarea id="student_advantages" name="student_advantages">
-{{ event.student_advantages }}</textarea
-      ><br />
+      <textarea id="student_advantages" name="student_advantages">{{ event.student_advantages }}</textarea><br />
 
       <label for="event_type">Type d'événement :</label>
-      <input
-        type="text"
-        id="event_type"
-        name="event_type"
-        value="{{ event.event_type }}"
-        required
-      /><br />
+      <input type="text" id="event_type" name="event_type" value="{{ event.event_type }}" required /><br />
 
       <input type="submit" value="Mettre à jour l'événement" />
     </form>
 
-    <a href="{{ url_for('add_event_notifications') }}"
-      >Retour à la liste des événements</a
-    >
+    <a href="{{ url_for('views.add_event_notifications') }}">Retour à la liste des événements</a>
   </body>
 </html>
+

@@ -363,7 +363,7 @@ def account(user_name):
 
     if not user:
         flash("User not found.", "danger")
-        return redirect(url_for("friends"))
+        return redirect(url_for("views.friends"))
 
     # Check if the logged-in user and the viewed user are friends
     checkStatusFriend = (
@@ -388,3 +388,315 @@ def account(user_name):
     return render_template(
         "account.html", user=user, current_user=current_user, friends=friends
     )
+
+
+@register_views.route("/add_friend/<int:friend_id>")
+def add_friend(friend_id):
+    if "user_id" not in session:
+        flash("You need to log in first.")
+        return redirect(url_for("login"))
+
+    current_user = User.query.get(session["user_id"])
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        flash("The user does not exist.")
+        return redirect(url_for("friends"))
+
+    # Check if a request already exists (either accepted or requested)
+    existing_requests = (
+        db.session.query(friendship_association)
+        .filter(
+            (friendship_association.c.user_id == current_user.user_id)
+            & (friendship_association.c.friend_id == friend.user_id)
+            | (friendship_association.c.user_id == friend.user_id)
+            & (friendship_association.c.friend_id == current_user.user_id)
+        )
+        .all()
+    )
+
+    # If there are no previous requests or accepted friends, send a new friend request
+    if not existing_requests:
+        stmt = friendship_association.insert().values(
+            user_id=current_user.user_id, friend_id=friend.user_id, status="requested"
+        )
+        db.session.execute(stmt)
+        db.session.commit()
+        flash(f"Friend request sent to {friend.name}.")
+    else:
+        # If there is a pending or accepted request, notify the user
+        for request in existing_requests:
+            if request.status == "requested":
+                flash(f"You have already sent a request to {friend.name}.")
+            elif request.status == "accepted":
+                flash(f"You are already friends with {friend.name}.")
+            break
+
+    return redirect(url_for("friends"))
+
+
+@register_views.route("/accept_friend/<int:friend_id>")
+def accept_friend(friend_id):
+    if "user_id" not in session:
+        flash("You need to log in first.")
+        return redirect(url_for("login"))
+
+    current_user = User.query.get(session["user_id"])
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        flash("The user does not exist.")
+        return redirect(url_for("friends"))
+
+    # Get the incoming friend request from the association table
+    incoming_request = (
+        db.session.query(friendship_association)
+        .filter_by(
+            user_id=friend.user_id, friend_id=current_user.user_id, status="requested"
+        )
+        .first()
+    )
+
+    if incoming_request:
+        # Update the friend request status to 'accepted'
+        db.session.execute(
+            friendship_association.update()
+            .where(
+                (friendship_association.c.user_id == friend.user_id)
+                & (friendship_association.c.friend_id == current_user.user_id)
+            )
+            .values(status="accepted")
+        )
+
+        # Ensure the reciprocal relationship is created
+        reciprocal_request = (
+            db.session.query(friendship_association)
+            .filter_by(user_id=current_user.user_id, friend_id=friend.user_id)
+            .first()
+        )
+
+        if not reciprocal_request:
+            db.session.execute(
+                friendship_association.insert().values(
+                    user_id=current_user.user_id,
+                    friend_id=friend.user_id,
+                    status="accepted",
+                )
+            )
+        db.session.commit()
+        flash(f"You are now friends with {friend.name}.")
+    else:
+        flash("No friend request found.")
+
+    return redirect(url_for("friends"))
+
+
+@register_views.route("/reject_friend/<int:friend_id>")
+def reject_friend(friend_id):
+    if "user_id" not in session:
+        flash("You need to log in first.")
+        return redirect(url_for("login"))
+
+    current_user = User.query.get(session["user_id"])
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        flash("The user does not exist.")
+        return redirect(url_for("friends"))
+
+    # Check if there's a pending friend request
+    incoming_request = (
+        db.session.query(friendship_association)
+        .filter_by(
+            user_id=friend.user_id, friend_id=current_user.user_id, status="requested"
+        )
+        .first()
+    )
+
+    if incoming_request:
+        # Properly delete the request using SQLAlchemy's delete method
+        db.session.execute(
+            friendship_association.delete().where(
+                (friendship_association.c.user_id == friend.user_id)
+                & (friendship_association.c.friend_id == current_user.user_id)
+            )
+        )
+        db.session.commit()
+        flash(f"Friend request from {friend.name} has been rejected.")
+    else:
+        flash("No friend request found.")
+
+    return redirect(url_for("friends"))
+
+
+@register_views.route("/remove_friend/<int:friend_id>")
+def remove_friend(friend_id):
+    if "user_id" not in session:
+        flash("You need to log in first.")
+        return redirect(url_for("login"))
+
+    # Fetch the current user and the friend
+    current_user = User.query.get(session["user_id"])
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        flash("The user does not exist.")
+        return redirect(url_for("friends"))
+
+    # Remove the friendship in both directions (both user->friend and friend->user)
+    db.session.execute(
+        friendship_association.delete().where(
+            (friendship_association.c.user_id == current_user.user_id)
+            & (friendship_association.c.friend_id == friend.user_id)
+        )
+    )
+
+    db.session.execute(
+        friendship_association.delete().where(
+            (friendship_association.c.user_id == friend.user_id)
+            & (friendship_association.c.friend_id == current_user.user_id)
+        )
+    )
+
+    db.session.commit()
+    flash(f"You have removed {friend.name} from your friends list.")
+    return redirect(url_for("friends"))
+
+
+# ----------------------Notifications-----------------------------------------
+
+
+# Route for the main page (to add events and list events)
+@register_views.route("/add_event_notifications", methods=["GET", "POST"])
+def add_event_notifications():
+    if request.method == "POST":  # When the form is submitted
+        # Get form data
+        event_title = request.form["titre"]
+        event_description = request.form["description"]
+        event_rules = request.form["rules"]
+        event_localisation = request.form["localisation"]
+        event_age_requirement = request.form["age_requirement"]
+        event_date = request.form["date_event"]
+        event_average_price = request.form["average_price"]
+        event_student_advantages = request.form["student_advantages"]
+        event_type = request.form["event_type"]
+
+        # Create new event
+        new_event = Event(
+            title=event_title,
+            description=event_description,
+            rules=event_rules,
+            localisation=event_localisation,
+            age_requirement=event_age_requirement,
+            average_price=event_average_price,
+            student_advantages=event_student_advantages,
+            date_event=datetime.strptime(
+                event_date, "%Y-%m-%dT%H:%M"
+            ),  # Parse date-time from the form
+            event_type=event_type,
+        )
+        try:
+            db.session.add(new_event)
+            db.session.commit()
+
+            # Create notification for event creation
+            notification = Notification(
+                action="Created",
+                message=f"Event '{new_event.title}' was created at {new_event.date_event.strftime('%Y-%m-%d %H:%M')}",
+            )
+            db.session.add(notification)
+            db.session.commit()
+
+            return redirect(
+                "/add_event_notifications"
+            )  # Redirect back to the events page
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+    else:
+        events = Event.query.all()
+        return render_template("add_event_notifications.html", events=events)
+
+
+# Route for deleting an event
+# Route for deleting an event
+@register_views.route("/delete/<int:event_id>", methods=["POST"])
+def delete_event(event_id):
+    event_to_delete = Event.query.get_or_404(event_id)
+    try:
+        event_title = event_to_delete.title  # Save the event title for the notification
+        db.session.delete(event_to_delete)
+        db.session.commit()
+
+        # Create notification for event deletion and link to event_id
+        notification = Notification(
+            action="Deleted",
+            message=f"Event '{event_title}' was deleted.",
+            event_id=event_id,  # Pass the event_id to associate with this notification
+        )
+        db.session.add(notification)
+        db.session.commit()
+
+        return redirect("/add_event_notifications")  # Redirect back to the events page
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+
+# Route for updating an event
+@register_views.route("/update/<int:event_id>", methods=["GET", "POST"])
+def update_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    old_title = event.title
+    old_description = event.description
+
+    if request.method == "POST":
+        # Get form data
+        event.title = request.form["titre"]
+        event.description = request.form["description"]
+        event.localisation = request.form["localisation"]
+        event.age_requirement = request.form["age_requirement"]
+        event.date_event = datetime.strptime(
+            request.form["date_event"], "%Y-%m-%dT%H:%M"
+        )  # Parse updated date
+        event.event_type = request.form["event_type"]
+
+        try:
+            db.session.commit()
+
+            # Create notification for event update
+            changes = []
+            if old_title != event.title:
+                changes.append(f"Title changed from '{old_title}' to '{event.title}'")
+            if old_description != event.description:
+                changes.append(
+                    f"Description changed from '{old_description}' to '{event.description}'"
+                )
+
+            notification_message = " ; ".join(changes)
+            notification = Notification(
+                action="Updated",
+                message=f"Event '{event.title}' was updated. Changes: {notification_message}",
+            )
+            db.session.add(notification)
+            db.session.commit()
+
+            return redirect(
+                "/add_event_notifications"
+            )  # Redirect back to the events page
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+    return render_template("update.html", event=event)
+
+
+# Route for displaying notifications
+@register_views.route("/notifications")
+def notifications():
+    notifications = Notification.query.order_by(Notification.timestamp.desc()).all()
+    return render_template("notifications.html", notifications=notifications)
+
+
+# Run the app
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()  # Create tables if not exist
+    app.run(debug=True)
