@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,10 +11,10 @@
   <body>
     <h1>Add Event</h1>
     <!-- Main heading for the page -->
-    <form action="/add_event" method="POST">
+    <form method="POST" action="{{ url_for('views.add_event') }}">
       <!-- Form for adding a new event -->
-      <label for="title">Event Title:</label>
-      <input type="text" id="title" name="title" required />
+      <label for="titre">Event Title:</label>
+      <input type="text" id="titre" name="titre" required />
       <!-- Input field for event title, required -->
 
       <label for="description">Description:</label>

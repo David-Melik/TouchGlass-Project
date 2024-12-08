@@ -55,46 +55,50 @@ def get_events():
 
 @register_views.route("/add_event", methods=["GET", "POST"])
 def add_event():
-    if request.method == "POST":
-        # Gather data from the submitted form
-        title = request.form["title"]
-        description = request.form["description"]
-        localisation = request.form["localisation"]
-        age_requirement = request.form["age_requirement"]
-        # Parse the date_event from the input format
-        date_event = datetime.strptime(request.form["date_event"], "%Y-%m-%dT%H:%M")
-        rules = request.form.get("rules", "")  # Use empty string if not provided
-        average_price = request.form.get(
-            "average_price", ""
-        )  # Use empty string if not provided
-        student_advantages = request.form.get(
-            "student_advantages", ""
-        )  # Use empty string if not provided
+    if request.method == "POST":  # When the form is submitted
+        # Get form data
+        event_title = request.form["titre"]
+        event_description = request.form["description"]
+        event_rules = request.form["rules"]
+        event_localisation = request.form["localisation"]
+        event_age_requirement = request.form["age_requirement"]
+        event_date = request.form["date_event"]
+        event_average_price = request.form["average_price"]
+        event_student_advantages = request.form["student_advantages"]
         event_type = request.form["event_type"]
 
-        # Create a new Event instance with the collected data
+        # Create new event
         new_event = Event(
-            title=title,
-            description=description,
-            localisation=localisation,
-            age_requirement=age_requirement,
-            date_event=date_event,
-            rules=rules,
-            average_price=average_price,
-            student_advantages=student_advantages,
+            title=event_title,
+            description=event_description,
+            rules=event_rules,
+            localisation=event_localisation,
+            age_requirement=event_age_requirement,
+            average_price=event_average_price,
+            student_advantages=event_student_advantages,
+            date_event=datetime.strptime(event_date, "%Y-%m-%dT%H:%M"),
             event_type=event_type,
         )
+        try:
+            db.session.add(new_event)
+            db.session.commit()
 
-        # Add the new event to the database session and commit the changes
-        db.session.add(new_event)
-        db.session.commit()
-        return redirect(
-            url_for("views.event_calendar")
-        )  # Redirect to the home page after adding the event
+            # Create notification for event creation
+            notification = Notification(
+                action="Created",
+                message=f"Event '{new_event.title}' was created at {new_event.date_event.strftime('%Y-%m-%d %H:%M')}",
+            )
+            db.session.add(notification)
+            db.session.commit()
 
-    return render_template(
-        "add_event.html"
-    )  # Render the form to add a new event if GET request
+            return redirect(url_for("views.event_calendar"))
+
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
+
+    else:
+        events = Event.query.all()
+        return render_template("add_event.html", events=events)
 
 
 # Register route

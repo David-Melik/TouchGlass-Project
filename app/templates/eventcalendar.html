@@ -117,7 +117,9 @@
         <p><strong>Event Type:</strong> <span id="eventType"></span></p>
         <p><strong>Date:</strong> <span id="eventDate"></span></p>
         <!-- Placeholder for the delete button -->
-        <a href="#" class="btn btn-danger mb-3" id="updateButton">Edit Event</a>
+        <a href="#" class="btn btn-primary mb-3" id="updateButton"
+          >Edit Event</a
+        >
         <form id="deleteForm" method="POST" style="display: none">
           <input type="hidden" name="event_id" id="eventIdInput" />
           <button type="submit" class="btn btn-danger mb-3">
@@ -160,19 +162,15 @@
 
             // Get the event ID
             var eventId = info.event.extendedProps.event_id;
-
             // Update the hidden input field for the delete form with the event ID
             document.getElementById("eventIdInput").value = eventId;
-
             // Update the delete form's action URL and update button's link
             var deleteForm = document.getElementById("deleteForm");
             deleteForm.setAttribute("action", "/delete/" + eventId);
-
             var updateButton = document.getElementById("updateButton");
             updateButton.setAttribute("href", "/update/" + eventId);
-
             // Show the delete form and update button
-            deleteForm.style.display = "block";
+            deleteForm.style.display = "contents";
 
             // Show the modal
             document.getElementById("myModal").style.display = "block";
